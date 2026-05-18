@@ -1,4 +1,9 @@
+import os
+
 from rich.console import Console
+from codie.llm import stream_response
+
+from codie.prompts import SYSTEM_PROMPT
 
 console = Console()
 
@@ -53,6 +58,10 @@ def start_session(mode: str, version: str):
     console.print(f"\n[bold cyan]Codie[/bold cyan] [dim]v{version} - {mode}[/dim]")
     console.print("[dim]Type /help for commands, /exit to quit.[/dim]\n")
 
+    messages = [
+        {"role": "system", "content": SYSTEM_PROMPT + f"\nCWD: {os.getcwd()}"}
+    ]
+
     while True:
         try:
             user_input = input("→ ").strip()
@@ -62,8 +71,20 @@ def start_session(mode: str, version: str):
 
             if user_input.startswith("/"):
                 mode = handle_slash_commands(user_input, mode)
-        
+                continue
+                
+            messages.append({
+                "role": "user", 
+                "content": user_input
+            })
+
+            response = stream_response(messages=messages)
+            messages.append({
+                "role": "assistant",
+                "content": "response"
+            })
 
         except KeyboardInterrupt:
-            console.print("\n[dim]Goodbye.[/dim]")
+            console.print()
+            console.print("\n[dim]Goodbye.[/dim]\n")
             break
