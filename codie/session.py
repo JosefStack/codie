@@ -81,7 +81,7 @@ def start_session(mode: str, version: str):
             response = stream_response(messages=messages)
             messages.append({
                 "role": "assistant",
-                "content": "response"
+                "content": response
             })
 
         except KeyboardInterrupt:
