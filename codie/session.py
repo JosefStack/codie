@@ -1,7 +1,7 @@
 import os
 
 from rich.console import Console
-from codie.llm import stream_response
+from codie.agent import run_agent
 
 from codie.prompts import SYSTEM_PROMPT
 
@@ -78,7 +78,7 @@ def start_session(mode: str, version: str):
                 "content": user_input
             })
 
-            response = stream_response(messages=messages)
+            response = run_agent(messages=messages)
             messages.append({
                 "role": "assistant",
                 "content": response
@@ -88,3 +88,7 @@ def start_session(mode: str, version: str):
             console.print()
             console.print("\n[dim]Goodbye.[/dim]\n")
             break
+
+        except Exception as e:
+            console.print(f"\n[red]Error: {str(e)}[/red]")
+            continue

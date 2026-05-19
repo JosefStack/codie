@@ -28,7 +28,7 @@ TOOLS = [
                 "type": "object",
                 "properties": {
                     "path" : {
-                        "type": "stirng",
+                        "type": "string",
                         "description": "Path to the file, relative to CWD."
                     },
                     "start_line": {
@@ -92,6 +92,25 @@ TOOLS = [
             }
         }
     }, 
+
+    {
+        "type": "function",
+        "function": {
+            "name": "delete_file",
+            "description": "Delete a file. Use with caution — this is irreversible.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the file, relative to CWD."
+                    }
+                },
+                "required": ["path"]
+            }
+        }
+    },
+
 
     {
         "type": "function",

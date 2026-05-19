@@ -70,6 +70,22 @@ def edit_file(path: str, old: str, new: str) -> str:
         return f"Error editing file: {str(e)}"
     
 
+def delete_file(path: str) -> str:
+    full_path = os.path.join(os.getcwd(), path)
+    
+    if not os.path.exists(full_path):
+        return f"Error: file '{path}' not found."
+
+    if os.path.abspath(full_path) == os.path.abspath(os.getcwd()):
+        return f"Error: cannot delete the current working directory."
+
+    try:
+        os.remove(full_path)
+        return f"Deleted '{path}'."
+    except Exception as e:
+        return f"Error deleting file: {str(e)}"
+
+
 def list_files(path: str = None) -> str:
     full_path = os.path.join(os.getcwd(), path) if path else os.getcwd()
     
