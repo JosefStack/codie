@@ -1,4 +1,5 @@
 import os 
+import time
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -24,22 +25,39 @@ def stream_response(messages: list) -> str:
             messages=messages,
             stream=True,
         )
-
-        first_chunk = next(iter(stream))
-    
+            
     console.print("[bold cyan]Codie:[/bold cyan] ", end="")
 
-    first_chunk_content = first_chunk.choices[0].delta.content
-    if first_chunk_content:
-        # print would work, but using console.print() for consistency
-        console.print(first_chunk_content, end="")
-        full_response += first_chunk_content
-    
     for chunk in stream:
         content = chunk.choices[0].delta.content
         if content:
             console.print(content, end="")
             full_response += content
-        
+
     console.print()
     return full_response
+
+
+def get_completion(messages: list, tools: list) -> object:
+    for attempt in range(3):
+        try:
+            response = client.chat.completions.create(
+                model=MODEL,
+                messages=messages,
+                tools=tools,
+                tool_choice="auto",
+            )
+
+            return response
+        
+        except Exception as e:
+            if "rate_limit" in str(e).lower():
+                if attempt < 2:
+                    console.print("[red]Rate limit reached. Try again in a moment.[/red]")
+                    time.sleep(10)
+                elif attempt == 2:
+                    console.print("[red]Rate limit reached. Try again after limit resets.[/red]")
+                    return None
+            else:
+                console.print(f"[red]Something went wrong: {str(e)}[/red]")
+                return None
