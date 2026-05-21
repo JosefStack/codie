@@ -165,5 +165,23 @@ TOOLS = [
         }
     }, 
 
+    {
+        "type": "function",
+        "function": {
+            "name": "run_command",
+            "description": "Run a shell command. Use for installing packages, running scripts, executing tests, checking git status etc.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "cmd": {
+                        "type": "string",
+                        "description": "The shell command to run."
+                    }
+                },
+                "required": ["cmd"]
+            }
+        }
+    }, 
 
+    
 ]

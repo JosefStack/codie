@@ -6,6 +6,7 @@ from codie.llm import get_completion, stream_response
 from codie.tools.registry import TOOLS
 from codie.tools.files import read_file, write_file, edit_file, delete_file, list_files
 from codie.tools.search import search_code
+from codie.tools.shell import run_command
 
 
 console = Console()
@@ -18,10 +19,11 @@ TOOL_MAP = {
     "edit_file": edit_file,
     "delete_file": delete_file,
     "list_files": list_files,
-    "search_code": search_code
+    "search_code": search_code,
+    "run_command": run_command,
 }
 
-def run_agent(messages: list) -> str:
+def run_agent(messages: list, mode: str) -> str:
     iterations = 0
 
     while iterations < MAX_ITERATIONS:
@@ -51,8 +53,13 @@ def run_agent(messages: list) -> str:
 
             if tool_name in TOOL_MAP:
                 console.print(f"[dim]  ⚙ Tool call: {tool_name}[/dim]")
-                with console.status(f"[dim]running...[/dim]", spinner="dots"):
-                    result = TOOL_MAP[tool_name](**tool_args)
+
+                if tool_name == "run_command":
+                    result = run_command(cmd=tool_args["cmd"], mode=mode)
+                else:
+                    with console.status("[dim]running...[/dim]", spinner="dots"):
+                        result = TOOL_MAP[tool_name](**tool_args)
+
                 console.print(f"[dim]  ✓ done[/dim]")
             else:
                 result = f"Error: unknown tool '{tool_name}'."

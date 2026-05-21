@@ -78,7 +78,7 @@ def start_session(mode: str, version: str):
                 "content": user_input
             })
 
-            response = run_agent(messages=messages)
+            response = run_agent(messages=messages, mode=mode)
             messages.append({
                 "role": "assistant",
                 "content": response
