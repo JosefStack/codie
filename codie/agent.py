@@ -5,6 +5,7 @@ from rich.console import Console
 from codie.llm import get_completion, stream_response
 from codie.tools.registry import TOOLS
 from codie.tools.files import read_file, write_file, edit_file, delete_file, list_files
+from codie.tools.search import search_code
 
 
 console = Console()
@@ -17,6 +18,7 @@ TOOL_MAP = {
     "edit_file": edit_file,
     "delete_file": delete_file,
     "list_files": list_files,
+    "search_code": search_code
 }
 
 def run_agent(messages: list) -> str:
