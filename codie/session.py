@@ -78,7 +78,7 @@ def start_session(mode: str, version: str):
                 "content": user_input
             })
 
-            response = run_agent(messages=messages)
+            response = run_agent(messages=messages, mode=mode)
             messages.append({
                 "role": "assistant",
                 "content": response
@@ -90,5 +90,12 @@ def start_session(mode: str, version: str):
             break
 
         except Exception as e:
-            console.print(f"\n[red]Error: {str(e)}[/red]")
+            error = str(e)
+            console.print(f"\n[red]Error: {error}[/red]\n")
+            # if "rate_limit" in error.lower():
+            #     console.print("\n[red]Rate limit reached. Try again in a moment.[/red]")
+            # elif "tool call validation" in error.lower():
+            #     console.print("\n[red]Something went wrong with the agent. Try rephrasing.[/red]")
+            # else:
+            #     console.print("\n[red]Something went wrong. Try again.[/red]")
             continue

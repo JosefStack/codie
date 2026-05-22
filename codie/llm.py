@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from rich.console import Console
-
+from rich.markdown import Markdown
 
 load_dotenv()
 console = Console()
@@ -20,21 +20,28 @@ def stream_response(messages: list) -> str:
     full_response = ""
 
     with console.status("[dim]thinking...[/dim]", spinner="dots"):
-        stream = client.chat.completions.create(
+        # not streaming to enable markdown rendering in the terminal. Will have to add real-time markdown parsing for streaming + mardown rendering.
+        response = client.chat.completions.create(
             model=MODEL,
             messages=messages,
-            stream=True,
+            # stream=True,
+            tool_choice="none",
+
         )
             
-    console.print("[bold cyan]Codie:[/bold cyan] ", end="")
+    # console.print("[bold cyan]Codie:[/bold cyan] ", end="")
 
-    for chunk in stream:
-        content = chunk.choices[0].delta.content
-        if content:
-            console.print(content, end="")
-            full_response += content
+    # for chunk in stream:
+    #     content = chunk.choices[0].delta.content
+    #     if content:
+    #         console.print(content, end="")
+    #         full_response += content
 
-    console.print()
+    # console.print()
+
+    full_response = response.choices[0].message.content
+    console.print("[bold cyan]Codie:[/bold cyan]")
+    console.print(Markdown(full_response))
     return full_response
 
 
@@ -53,11 +60,11 @@ def get_completion(messages: list, tools: list) -> object:
         except Exception as e:
             if "rate_limit" in str(e).lower():
                 if attempt < 2:
-                    console.print("[red]Rate limit reached. Try again in a moment.[/red]")
+                    console.print("\n[red]Rate limit reached. Try again in a moment.[/red]")
                     time.sleep(10)
                 elif attempt == 2:
-                    console.print("[red]Rate limit reached. Try again after limit resets.[/red]")
+                    console.print("\n[red]Rate limit reached. Try again after limit resets.[/red]")
                     return None
             else:
-                console.print(f"[red]Something went wrong: {str(e)}[/red]")
+                console.print(f"\n[red]Something went wrong: {str(e)}[/red]")
                 return None

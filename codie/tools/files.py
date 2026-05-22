@@ -1,6 +1,6 @@
 import os
 
-def read_file(path: str, start_line: int = 1, end_line: int = 200) -> str:
+def read_file(path: str, line_start: int = 1, line_end: int = 200) -> str:
     full_path = os.path.join(os.getcwd(), path)
 
     if not os.path.exists(full_path):
@@ -10,13 +10,13 @@ def read_file(path: str, start_line: int = 1, end_line: int = 200) -> str:
         with open(full_path, "r", encoding="utf-8") as f:
             lines = f.readlines()
 
-        selected = lines[start_line - 1 : end_line]
+        selected = lines[line_start - 1 : line_end]
 
         if not selected:
-            return f"Error: File range {start_line}-{end_line} is out of bounds. File has {len(lines)} lines."
+            return f"Error: File range {line_start}-{line_end} is out of bounds. File has {len(lines)} lines."
         
         result = ""
-        for i, line in enumerate(selected, start=start_line):
+        for i, line in enumerate(selected, start=line_start):
             results += f"Line {i}: {line}"
         
         return result

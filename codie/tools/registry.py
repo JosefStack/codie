@@ -19,6 +19,7 @@
 #     }, 
 
 TOOLS = [
+    # read_file
     {
         "type": "function",
         "function": {
@@ -31,13 +32,13 @@ TOOLS = [
                         "type": "string",
                         "description": "Path to the file, relative to CWD."
                     },
-                    "start_line": {
+                    "line_start": {
                         "type": "integer",
                         "description": "Line to start reading from. Defaults to 1."
                     },
-                    "end_line": {
+                    "line_end": {
                         "type": "integer",
-                        "description": "Line to stop reading at. Defaults to 200."
+                        "description": "Line to stop reading at. Parameter name is 'end_line'. Defaults to 200."
                     },
                 },
                 "required": ["path"]
@@ -45,6 +46,7 @@ TOOLS = [
         }
     }, 
 
+    # write_file for creating new files or writing full content of a file.
     {
         "type": "function",
         "function": {
@@ -67,6 +69,7 @@ TOOLS = [
         }
     }, 
 
+    # edit_file for editing certain lines/content of a file
     {
         "type": "function",
         "function": {
@@ -93,6 +96,7 @@ TOOLS = [
         }
     }, 
 
+    # delete_file for deleting only files (doesn't delete folders, use shell for that)
     {
         "type": "function",
         "function": {
@@ -111,7 +115,7 @@ TOOLS = [
         }
     },
 
-
+    # list_files for listing all files and folders in a directory
     {
         "type": "function",
         "function": {
@@ -125,9 +129,98 @@ TOOLS = [
                         "description": "Directory path to list. Defaults to CWD."
                     },
                 },
-                "required": []
+                # "required": []
             }
         }
     }, 
 
+    # search_code using ripgrep
+    {
+        "type": "function",
+        "function": {
+            "name": "search_code",
+            "description": "Search for a pattern or word across the codebase using ripgrep. Use this when it's needed to find out the file consisting a pattern or word. Use this before read_file to find which files are relevant.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "pattern" : {
+                        "type": "string",
+                        "description": "The search pattern or regex."
+                    },
+                    "file_type": {
+                        "type": "string",
+                        "description": "Filter by file type e.g. 'py', 'js', 'ts'. Optional. Omit if not needed.",
+                    },
+                    "path": {
+                        "type": "string",
+                        "description": "Directory to search in. Defaults to CWD."
+                    },
+                    "max_results": {
+                        "type": "integer",
+                        "description": "Maximum number of results to return. Defaults to 50."
+                    }
+                },
+                "required": ["pattern"]
+            }
+        }
+    }, 
+
+    {
+        "type": "function",
+        "function": {
+            "name": "run_command",
+            "description": "Run a shell command. Use for installing packages, running scripts, executing tests, checking git status etc.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "cmd": {
+                        "type": "string",
+                        "description": "The shell command to run."
+                    }
+                },
+                "required": ["cmd"]
+            }
+        }
+    }, 
+
+    {
+        "type": "function",
+        "function": {
+            "name": "web_search",
+            "description": "Search the web for current information, documentation, or answers. Use this when you need up-to-date information or can't find the answer in the codebase. The query can be a question or a string of keywords.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query" : {
+                        "type": "string",
+                        "description": "The search query, which can be a question or keywords."
+                    },
+                "max_results": {
+                        "type": "integer",
+                        "description": "Maximum number of search results to return. Defaults to 5."
+                    }
+                },
+                "required": ["query"]
+            }
+        }
+    }, 
+
+    {
+        "type": "function",
+        "function": {
+            "name": "crawl_url",
+            "description": "Fetch and read the content of a URL. Use for reading documentation or web pages. Use web_search first to find relevant URLs, then use crawl_url to read their content. If user provides an URL, search it directly without needing web_search.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "url" : {
+                        "type": "string",
+                        "description": "The URL to crawl. Must be the complete URL including https://"
+                    },
+                },
+                "required": ["url"]
+            }
+        }
+    }, 
+    
 ]
