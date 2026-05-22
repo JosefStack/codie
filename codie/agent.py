@@ -7,6 +7,7 @@ from codie.tools.registry import TOOLS
 from codie.tools.files import read_file, write_file, edit_file, delete_file, list_files
 from codie.tools.search import search_code
 from codie.tools.shell import run_command
+from codie.tools.web import web_search, crawl_url
 
 
 console = Console()
@@ -21,6 +22,8 @@ TOOL_MAP = {
     "list_files": list_files,
     "search_code": search_code,
     "run_command": run_command,
+    "web_search": web_search,
+    "crawl_url": crawl_url,
 }
 
 def run_agent(messages: list, mode: str) -> str:
@@ -45,7 +48,22 @@ def run_agent(messages: list, mode: str) -> str:
             
             return streamed_response
 
-        messages.append(message)
+        messages.append(
+            {
+                "role": "assistant",
+                "content": message.content,
+                "tool_calls": [
+                    {
+                        "id" : tc.id,
+                        "type": tc.type,
+                        "function": {
+                            "name" : tc.function.name,
+                            "arguments": tc.function.arguments,
+                        }
+                    } for tc in message.tool_calls
+                ]
+            }
+        )
 
         for tool_call in message.tool_calls:
             tool_name = tool_call.function.name

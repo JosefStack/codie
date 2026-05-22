@@ -183,5 +183,44 @@ TOOLS = [
         }
     }, 
 
+    {
+        "type": "function",
+        "function": {
+            "name": "web_search",
+            "description": "Search the web for current information, documentation, or answers. Use this when you need up-to-date information or can't find the answer in the codebase. The query can be a question or a string of keywords.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query" : {
+                        "type": "string",
+                        "description": "The search query, which can be a question or keywords."
+                    },
+                "max_results": {
+                        "type": "integer",
+                        "description": "Maximum number of search results to return. Defaults to 5."
+                    }
+                },
+                "required": ["query"]
+            }
+        }
+    }, 
+
+    {
+        "type": "function",
+        "function": {
+            "name": "crawl_url",
+            "description": "Fetch and read the content of a URL. Use for reading documentation or web pages. Use web_search first to find relevant URLs, then use crawl_url to read their content. If user provides an URL, search it directly without needing web_search.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "url" : {
+                        "type": "string",
+                        "description": "The URL to crawl. Must be the complete URL including https://"
+                    },
+                },
+                "required": ["url"]
+            }
+        }
+    }, 
     
 ]
