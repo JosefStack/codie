@@ -25,7 +25,7 @@ def stream_response(messages: list) -> str:
             model=MODEL,
             messages=messages,
             # stream=True,
-            tool_choice="none",
+            tool_choice="auto",
 
         )
             

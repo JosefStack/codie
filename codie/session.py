@@ -5,6 +5,12 @@ from codie.agent import run_agent
 
 from codie.prompts import SYSTEM_PROMPT
 
+from codie.tools.memory.utils import read_memory as _read_memory, memory_exists
+
+from codie.tools.files import list_files
+from codie.llm import get_completion
+from codie.tools.memory.memory import write_memory
+
 console = Console()
 
 SLASH_COMMANDS = {
@@ -53,14 +59,55 @@ def handle_slash_commands(user_input: str, mode: str) -> str:
 
     return mode
 
+def setup_memory() -> None:
+    console.print("[dim]Reading project files...[/dim]")
+    file_tree = list_files()
+
+    messages = [
+        {
+            "role": "system",
+            "content": "Generate a concise AGENT.md for this project based on the file tree. Include sections: Stack, Commands, Important Files, Conventions, Notes for Agent. Keep it under 50 lines. Return only the markdown content, no explanation."
+        },
+        {
+            "role": "user",
+            "content": f"File tree:\n{file_tree}"
+        }
+    ]
+
+    response = get_completion(messages, tools=[])
+    content = response.choices[0].message.content
+    write_memory(content)
+    console.print("[green]Project memory created at .codie/AGENT.md[/green]")
+    
+    return content
 
 def start_session(mode: str, version: str):
     console.print(f"\n[bold cyan]Codie[/bold cyan] [dim]v{version} - {mode}[/dim]")
     console.print("[dim]Type /help for commands, /exit to quit.[/dim]\n")
 
+    memory = ""
+    memory_enabled = False
+
+    if memory_exists():
+        memory_enabled = True
+        memory = _read_memory()
+        console.print("[dim]Project memory loaded.[/dim]")
+    else:
+        answer = input("Setup project memory? [y/n]: ").strip().lower()
+        if answer == "y":
+            memory_enabled = True
+            memory = setup_memory()
+            console.print("[dim]Project memory enabled.[/dim]")
+        else:
+            console.print("[dim]Project memory disabled.[/dim]\n")
+
     messages = [
-        {"role": "system", "content": SYSTEM_PROMPT + f"\nCWD: {os.getcwd()}"}
+        {"role": "system", "content": SYSTEM_PROMPT + f"\nCWD: {os.getcwd()}" + (f"\n\n# Project Memory\n{memory}" if memory else "")}
     ]
+
+    
+
+
 
     while True:
         try:
@@ -78,7 +125,7 @@ def start_session(mode: str, version: str):
                 "content": user_input
             })
 
-            response = run_agent(messages=messages, mode=mode)
+            response = run_agent(messages=messages, mode=mode, memory_enabled=memory_enabled)
             messages.append({
                 "role": "assistant",
                 "content": response

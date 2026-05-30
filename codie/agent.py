@@ -9,11 +9,18 @@ from codie.tools.search import search_code
 from codie.tools.shell import run_command
 from codie.tools.web import web_search, crawl_url
 from codie.tools.debug import run_debug
+from codie.tools.memory.memory import read_memory, write_memory, append_memory
 
 
 console = Console()
 
 MAX_ITERATIONS = 25
+
+MEMORY_TOOLS = {
+    "read_memory": read_memory, 
+    "write_memory": write_memory,
+    "append_memory": append_memory,
+}
 
 TOOL_MAP = {
     "read_file": read_file,
@@ -28,7 +35,10 @@ TOOL_MAP = {
     "run_debug": run_debug,
 }
 
-def run_agent(messages: list, mode: str) -> str:
+def run_agent(messages: list, mode: str, memory_enabled: bool) -> str:
+    if memory_enabled:
+        TOOL_MAP.update(MEMORY_TOOLS)
+
     iterations = 0
 
     while iterations < MAX_ITERATIONS:
