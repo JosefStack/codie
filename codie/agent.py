@@ -10,6 +10,7 @@ from codie.tools.shell import run_command
 from codie.tools.web import web_search, crawl_url
 from codie.tools.debug import run_debug
 from codie.tools.memory.memory import read_memory, write_memory, append_memory
+from codie.utils.tokens import TokenTracker
 
 
 console = Console()
@@ -35,7 +36,7 @@ TOOL_MAP = {
     "run_debug": run_debug,
 }
 
-def run_agent(messages: list, mode: str, memory_enabled: bool) -> str:
+def run_agent(messages: list, mode: str, memory_enabled: bool, token_tracker: TokenTracker) -> str:
     if memory_enabled:
         TOOL_MAP.update(MEMORY_TOOLS)
 
@@ -45,14 +46,14 @@ def run_agent(messages: list, mode: str, memory_enabled: bool) -> str:
         iterations += 1
 
         with console.status("[dim]thinking...[/dim]", spinner="dots"):
-            response = get_completion(messages=messages, tools=TOOLS)
+            response = get_completion(messages=messages, tools=TOOLS, token_tracker=token_tracker)
 
         if not response:
             return "Agent terminated due to error"
         message = response.choices[0].message
 
         if not message.tool_calls:
-            streamed_response = stream_response(messages)
+            streamed_response = stream_response(messages, token_tracker=token_tracker)
             messages.append({
                 "role": "assistant",
                 "content": streamed_response,

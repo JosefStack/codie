@@ -11,7 +11,12 @@ from codie.tools.files import list_files
 from codie.llm import get_completion
 from codie.tools.memory.memory import write_memory
 
+from codie.utils.tokens import TokenTracker
+
 console = Console()
+
+token_tracker = TokenTracker()
+
 
 SLASH_COMMANDS = {
     "/exit": "Exit Codie", 
@@ -22,7 +27,7 @@ SLASH_COMMANDS = {
     "/cost": "Show token usage and cost",
 }
 
-def handle_slash_commands(user_input: str, mode: str) -> str:
+def handle_slash_commands(user_input: str, mode: str, token_tracker: TokenTracker) -> str:
     parts = user_input.strip().split()
     command = parts[0]
     args = parts[1:] if len(parts) > 1 else []
@@ -52,7 +57,9 @@ def handle_slash_commands(user_input: str, mode: str) -> str:
             console.print(f"[dim]Current mode: {mode}[/dim]")
 
     elif command == "/cost":
-        console.print("[dim]No usage tracked yet.[/dim]")
+        console.print(f"\n[bold]Usage breakdown:[/bold]\n")
+        console.print(token_tracker.cost())
+        console.print()
 
     else:
         console.print(f"[red]Unknown command '{command}'. Type /help for available commands.[/red]")
@@ -74,7 +81,7 @@ def setup_memory() -> None:
         }
     ]
 
-    response = get_completion(messages, tools=[])
+    response = get_completion(messages, tools=[], token_tracker=token_tracker)
     content = response.choices[0].message.content
     write_memory(content)
     console.print("[green]Project memory created at .codie/AGENT.md[/green]")
@@ -117,7 +124,7 @@ def start_session(mode: str, version: str):
                 continue
 
             if user_input.startswith("/"):
-                mode = handle_slash_commands(user_input, mode)
+                mode = handle_slash_commands(user_input, mode, token_tracker)
                 continue
                 
             messages.append({
@@ -125,7 +132,7 @@ def start_session(mode: str, version: str):
                 "content": user_input
             })
 
-            response = run_agent(messages=messages, mode=mode, memory_enabled=memory_enabled)
+            response = run_agent(messages=messages, mode=mode, memory_enabled=memory_enabled, token_tracker=token_tracker)
             messages.append({
                 "role": "assistant",
                 "content": response

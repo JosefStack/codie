@@ -6,6 +6,8 @@ from openai import OpenAI
 from rich.console import Console
 from rich.markdown import Markdown
 
+from codie.utils.tokens import TokenTracker
+
 load_dotenv()
 console = Console()
 
@@ -16,7 +18,7 @@ client = OpenAI(
 
 MODEL = "openai/gpt-oss-120b"
 
-def stream_response(messages: list) -> str:
+def stream_response(messages: list, token_tracker: TokenTracker) -> str:
     full_response = ""
 
     with console.status("[dim]thinking...[/dim]", spinner="dots"):
@@ -28,6 +30,7 @@ def stream_response(messages: list) -> str:
             tool_choice="auto",
 
         )
+        token_tracker.add(response.usage)
             
     # console.print("[bold cyan]Codie:[/bold cyan] ", end="")
 
@@ -45,7 +48,7 @@ def stream_response(messages: list) -> str:
     return full_response
 
 
-def get_completion(messages: list, tools: list) -> object:
+def get_completion(messages: list, tools: list, token_tracker: TokenTracker) -> object:
     for attempt in range(3):
         try:
             response = client.chat.completions.create(
@@ -54,7 +57,8 @@ def get_completion(messages: list, tools: list) -> object:
                 tools=tools,
                 tool_choice="auto",
             )
-
+            token_tracker.add(response.usage)
+            
             return response
         
         except Exception as e:
