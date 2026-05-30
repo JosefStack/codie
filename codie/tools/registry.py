@@ -248,5 +248,52 @@ TOOLS = [
             }
         }
     }, 
+
+    {
+        "type": "function",
+        "function": {
+            "name": "append_memory",
+            "description": "Append important project information to memory. Use when you discover the stack, conventions, key files, commands, or important decisions. This persists across sessions.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "content" : {
+                        "type": "string",
+                        "description": "The information to save. Be concise — a few lines max."
+                    },
+                },
+                "required": ["content"]
+            }
+        }
+    }, 
+
+    {
+        "type": "function",
+        "function": {
+            "name": "write_memory",
+            "description": "Overwrite the entire memory file. Use ONLY when memory exceeds 200 lines and needs to be compacted. Summarize the existing memory and write the condensed version.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "content" : {
+                        "type": "string",
+                        "description": "The full compacted memory content. Must be under 200 lines."
+                    },
+                },
+                "required": ["content"]
+            }
+        }
+    }, 
     
+    {
+        "type": "function",
+        "function": {
+            "name": "read_memory",
+            "description": "Read the current project memory from AGENT.md. Use this before writing or compacting memory to see what's already there.",
+            "parameters": {
+                "type": "object",
+                "properties": {}
+            }
+        }
+    },
 ]

@@ -17,8 +17,10 @@ SYSTEM_PROMPT = f"""
     - web_search returns snippets. Only call crawl_url if you need the full content of a specific page.
     - Never crawl all search results. Pick the most relevant one if needed.
     - After writing code, write tests first if none exist, then call run_debug.
-
-    "IMPORTANT: Only call these exact tools: read_file, write_file, edit_file, delete_file, list_files, search_code, run_command, web_search, crawl_url, run_debug. Calling any other tool name will cause an error."
+    - You have full shell access via run_command. node, npm, python, pip are all available. Never say you cannot run commands. You can run every single shell command.
+    - When memory tools are available, call append_memory to save important project discoveries.
+    
+    IMPORTANT: Only call these exact tools: read_file, write_file, edit_file, delete_file, list_files, search_code, run_command, web_search, crawl_url, run_debug. Calling any other tool name will cause an error.
     
     Current date: {datetime.now().strftime('%B %d, %Y %H:%M:%S')}.
 """
