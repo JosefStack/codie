@@ -8,6 +8,7 @@ from codie.tools.files import read_file, write_file, edit_file, delete_file, lis
 from codie.tools.search import search_code
 from codie.tools.shell import run_command
 from codie.tools.web import web_search, crawl_url
+from codie.tools.debug import run_debug
 
 
 console = Console()
@@ -24,6 +25,7 @@ TOOL_MAP = {
     "run_command": run_command,
     "web_search": web_search,
     "crawl_url": crawl_url,
+    "run_debug": run_debug,
 }
 
 def run_agent(messages: list, mode: str) -> str:
@@ -72,7 +74,9 @@ def run_agent(messages: list, mode: str) -> str:
             if tool_name in TOOL_MAP:
                 console.print(f"[dim]  ⚙ Tool call: {tool_name}[/dim]")
 
-                if tool_name == "run_command":
+                if tool_name == "delete_file":
+                    result = delete_file(path=tool_args["path"], mode=mode)
+                elif tool_name == "run_command":
                     result = run_command(cmd=tool_args["cmd"], mode=mode)
                 else:
                     with console.status("[dim]running...[/dim]", spinner="dots"):
