@@ -222,5 +222,31 @@ TOOLS = [
             }
         }
     }, 
+
+    {
+        "type": "function",
+        "function": {
+            "name": "run_debug",
+            "description": "Run lint and tests to verify code works. Call this after completing any coding task. If no tests exist, write them first before calling this.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "stack" : {
+                        "type": "string",
+                        "description": "Detected stack: python, javascript, typescript, rust, go, etc."
+                    },
+                    "lint_commands": {
+                        "type": "string",
+                        "description": "Comma separated lint/typecheck commands e.g. 'ruff check .,mypy .'"
+                    },
+                    "test_commands": {
+                        "type": "string",
+                        "description": "Command to run tests e.g. 'pytest', 'npm test', 'cargo test'. Omit if no tests exist."
+                    }
+                },
+                "required": ["stack", "lint_commands"]
+            }
+        }
+    }, 
     
 ]

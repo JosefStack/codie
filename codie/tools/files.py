@@ -70,15 +70,26 @@ def edit_file(path: str, old: str, new: str) -> str:
         return f"Error editing file: {str(e)}"
     
 
-def delete_file(path: str) -> str:
+def delete_file(path: str, mode: str = "review") -> str:
     full_path = os.path.join(os.getcwd(), path)
     
     if not os.path.exists(full_path):
         return f"Error: file '{path}' not found."
-
+    
     if os.path.abspath(full_path) == os.path.abspath(os.getcwd()):
         return f"Error: cannot delete the current working directory."
-
+    
+    if os.path.isdir(full_path):
+        return f"Error: '{path}' is a directory. Use run_command with rmdir instead."
+    
+    if mode == "review":
+        try:
+            answer = input(f"\n[codie] delete: {path}\nAllow? [y/n]: ").strip().lower()
+            if answer != "y":
+                return "Deletion cancelled by user."
+        except KeyboardInterrupt:
+            return "Deletion cancelled by user."
+    
     try:
         os.remove(full_path)
         return f"Deleted '{path}'."
