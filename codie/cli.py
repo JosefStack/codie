@@ -1,7 +1,10 @@
+from dotenv import load_dotenv
 import typer
 from typing import Optional
 from codie import __version__
 from codie.config import configure as run_configuration
+
+load_dotenv()
 
 app = typer.Typer(add_completion=False)
 

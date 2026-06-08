@@ -24,6 +24,8 @@ Codie: Done. API is running on port 8000, all tests passing.
 ## Requirements
 
 - Python 3.10+
+- ripgrep — `winget install BurntSushi.ripgrep` (Windows) / `brew install ripgrep` (Mac) / `apt install ripgrep` (Linux)
+
 - A [Groq API key](https://console.groq.com) (free)
 - A [Tavily API key](https://tavily.com) (free, 1000 searches/month)
 - A [Jina API key](https://jina.ai) (free, 500 RPM)
