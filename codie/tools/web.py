@@ -3,7 +3,7 @@ import httpx
 from tavily import TavilyClient
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 
 def web_search(query: str, max_results: int = 5) -> str:
@@ -59,9 +59,3 @@ def crawl_url(url: str) -> str:
         return f"Error: Timeout while trying to crawl URL: {url}"
     except Exception as e:
         return f"Error crawling URL: {str(e)}"
-
-
-
-
-
-crawl_url("https://www.llamaindex.ai/insights")

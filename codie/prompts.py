@@ -20,7 +20,7 @@ SYSTEM_PROMPT = f"""
     - You have full shell access via run_command. node, npm, python, pip are all available. Never say you cannot run commands. You can run every single shell command.
     - When memory tools are available, call append_memory to save important project discoveries.
     
-    IMPORTANT: Only call these exact tools: read_file, write_file, edit_file, delete_file, list_files, search_code, run_command, web_search, crawl_url, run_debug. Calling any other tool name will cause an error.
+    IMPORTANT: You must only call these exact tools: read_file, write_file, edit_file, delete_file, list_files, search_code, run_command, web_search, crawl_url, run_debug. Calling any other tool name will cause an error.
     
     Current date: {datetime.now().strftime('%B %d, %Y %H:%M:%S')}.
 """

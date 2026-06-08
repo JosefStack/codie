@@ -17,7 +17,7 @@ def read_file(path: str, line_start: int = 1, line_end: int = 200) -> str:
         
         result = ""
         for i, line in enumerate(selected, start=line_start):
-            results += f"Line {i}: {line}"
+            result += f"Line {i}: {line}"
         
         return result
 
@@ -34,7 +34,7 @@ def write_file(path: str, content: str) -> str:
         with open(full_path, "w", encoding="utf-8") as f:
             f.write(content)
 
-        return f"Written to '{path}."
+        return f"Written to '{path}'."
 
 
     except Exception as e:

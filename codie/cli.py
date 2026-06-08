@@ -1,6 +1,7 @@
 import typer
 from typing import Optional
 from codie import __version__
+from codie.config import configure as run_configuration
 
 app = typer.Typer(add_completion=False)
 
@@ -13,6 +14,7 @@ def version_callback(value: bool):
 def main(
     mode: str = typer.Option("review", "--mode", "-m", help="Agent mode: plan, review, auto"), 
     version: Optional[bool] = typer.Option(None, "--version", "-v", callback=version_callback, is_eager=True, help="Show version and exit"),
+    configure: Optional[bool] = typer.Option(None, "--configure", "-c", callback=run_configuration, is_eager=True, help="Configure API keys and settings")
 ):
     """Start the Codie coding agent in the current directory."""
     typer.echo("Codie is running!")
