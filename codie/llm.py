@@ -8,7 +8,7 @@ from rich.markdown import Markdown
 
 from codie.utils.tokens import TokenTracker
 
-load_dotenv(override=True)
+load_dotenv()
 console = Console()
 
 client = OpenAI(

@@ -3,7 +3,7 @@ import httpx
 from tavily import TavilyClient
 from dotenv import load_dotenv
 
-load_dotenv(override=True)
+load_dotenv()
 
 
 def web_search(query: str, max_results: int = 5) -> str:
