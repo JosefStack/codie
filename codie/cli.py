@@ -20,7 +20,5 @@ def main(
     configure: Optional[bool] = typer.Option(None, "--configure", "-c", callback=run_configuration, is_eager=True, help="Configure API keys and settings")
 ):
     """Start the Codie coding agent in the current directory."""
-    typer.echo("Codie is running!")
-
     from codie.session import start_session
     start_session(mode, __version__)
