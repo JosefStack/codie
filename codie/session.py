@@ -80,6 +80,13 @@ def handle_slash_commands(user_input: str, mode: str, token_tracker: TokenTracke
                 console.print(f"[green]Model changed to {args[0]}[/green]")
         else:
             console.print(f"[dim]Current model: [/dim][cyan]{os.environ.get('CODIE_MODEL')}[/cyan]")
+
+            console.print("\n[bold]Available models:[/bold]")
+            console.print("  1. [cyan][bold]GPT OSS 120B[/bold][/cyan] [dim](openai/gpt-oss-120b)[/dim]")
+            console.print("  2. [cyan][bold]GPT OSS 20B[/bold][/cyan] [dim](openai/gpt-oss-20b)[/dim]")
+            console.print("  3. [cyan][bold]Llama 4 Scout[/bold][/cyan] [dim](meta-llama/llama-4-scout-17b-16e-instruct)[/dim]")
+            console.print("  4. [cyan][bold]Qwen 3 32B[/bold][/cyan] [dim](qwen/qwen3-32b)[/dim]")
+
     else:
         console.print(f"[red]Unknown command '{command}'. Type /help for available commands.[/red]")
 
