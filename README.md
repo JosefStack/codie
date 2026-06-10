@@ -171,4 +171,4 @@ export CODIE_MODEL=openai/gpt-oss-120b
 
 ## License
 
-MIT — built by [Josef Johnson](https://github.com/JosefStack)
+MIT — built by [Joseph Johnson](https://github.com/JosefStack)
