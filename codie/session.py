@@ -28,6 +28,7 @@ SLASH_COMMANDS = {
     "/mode": "Show or change mode",
     "/clear": "Clear the screen",
     "/cost": "Show token usage and cost",
+    "/model": "Show or change model",
 }
 
 def handle_slash_commands(user_input: str, mode: str, token_tracker: TokenTracker) -> str:
@@ -64,6 +65,21 @@ def handle_slash_commands(user_input: str, mode: str, token_tracker: TokenTracke
         console.print(token_tracker.cost())
         console.print()
 
+    elif command == "/model":
+        if args:
+            valid_models = [
+                "openai/gpt-oss-120b",
+                "openai/gpt-oss-20b", 
+                "meta-llama/llama-4-scout-17b-16e-instruct",
+                "qwen/qwen3-32b",
+            ]
+            if args[0] not in valid_models:
+                console.print(f"[red]Invalid model. Choose from: {', '.join(valid_models)}[/red]")
+            else:
+                os.environ["CODIE_MODEL"] = args[0]
+                console.print(f"[green]Model changed to {args[0]}[/green]")
+        else:
+            console.print(f"[dim]Current model: [/dim][cyan]{os.environ.get('CODIE_MODEL')}[/cyan]")
     else:
         console.print(f"[red]Unknown command '{command}'. Type /help for available commands.[/red]")
 

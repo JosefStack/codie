@@ -8,15 +8,17 @@ from rich.markdown import Markdown
 
 from codie.utils.tokens import TokenTracker
 
+
 load_dotenv()
 console = Console()
 
-client = OpenAI(
-    api_key=os.environ.get("NVIDIA_API_KEY"),
-    base_url="https://integrate.api.nvidia.com/v1",
-)
+def get_model() -> str:
+    return os.environ.get("CODIE_MODEL", "meta-llama/llama-4-scout-17b-16e-instruct")
 
-MODEL = "openai/gpt-oss-120b"
+client = OpenAI(
+    api_key=os.environ.get("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1",
+)
 
 def stream_response(messages: list, token_tracker: TokenTracker) -> str:
     full_response = ""
@@ -24,7 +26,7 @@ def stream_response(messages: list, token_tracker: TokenTracker) -> str:
     with console.status("[dim]thinking...[/dim]", spinner="dots"):
         # not streaming to enable markdown rendering in the terminal. Will have to add real-time markdown parsing for streaming + mardown rendering.
         response = client.chat.completions.create(
-            model=MODEL,
+            model=get_model(),
             messages=messages,
             # stream=True,
             tool_choice="auto",
@@ -41,6 +43,7 @@ def stream_response(messages: list, token_tracker: TokenTracker) -> str:
     #         full_response += content
 
     # console.print()
+    print(response.model)
 
     full_response = response.choices[0].message.content
     console.print("[bold cyan]Codie:[/bold cyan]")
@@ -52,7 +55,7 @@ def get_completion(messages: list, tools: list, token_tracker: TokenTracker) -> 
     for attempt in range(3):
         try:
             response = client.chat.completions.create(
-                model=MODEL,
+                model=get_model(),
                 messages=messages,
                 tools=tools,
                 tool_choice="auto",
