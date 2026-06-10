@@ -20,8 +20,8 @@ def load_config() -> None:
         config = tomllib.load(f)
     
     keys = config.get("api_keys", {})
-    if keys.get("groq"):
-        os.environ["GROQ_API_KEY"] = keys["groq"]
+    if keys.get("nvidia"):
+        os.environ["NVIDIA_API_KEY"] = keys["nvidia"]
     else: 
         return False
     
@@ -32,12 +32,12 @@ def load_config() -> None:
 
     return True
 
-def save_config(groq: str, tavily: str, jina: str , mode: str) -> None:
+def save_config(nvidia: str, tavily: str, jina: str , mode: str) -> None:
     CODIE_HOME.mkdir(exist_ok=True)
     
     config = {
         "api_keys": {
-            "groq": groq,
+            "nvidia": nvidia,
             "tavily": tavily,
             "jina": jina,
         },
@@ -58,7 +58,7 @@ def configure(force: bool = False) -> str:
     
     console.print("\n[bold cyan]Welcome to Codie![/bold cyan] Let's get you set up.\n")
     
-    groq = input("Groq API key (console.groq.com): ").strip()
+    nvidia = input("Nvidia API key (build.nvidia.com): ").strip()
     tavily = input("Tavily API key (tavily.com): ").strip()
     jina = input("Jina API key (jina.ai, optional): ").strip()
     mode = input("Default mode [review/auto/plan] (enter for review): ").strip() or "review"
@@ -66,7 +66,7 @@ def configure(force: bool = False) -> str:
     if mode not in ("review", "auto", "plan"):
         mode = "review"
     
-    save_config(groq, tavily, jina, mode)
+    save_config(nvidia, tavily, jina, mode)
     console.print(f"\n[green]Config saved to {CONFIG_PATH}[/green]\n")
     
     return mode

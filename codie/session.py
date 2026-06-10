@@ -1,6 +1,9 @@
 import os
 
 from rich.console import Console
+from rich.panel import Panel
+from rich.text import Text
+from rich.align import Align
 from codie.agent import run_agent
 
 from codie.prompts import SYSTEM_PROMPT
@@ -88,9 +91,25 @@ def setup_memory() -> None:
     
     return content
 
+ASCII_ART = """\
+ ██████╗  ██████╗ ██████╗ ██╗███████╗
+██╔════╝ ██╔═══██╗██╔══██╗██║██╔════╝
+██║      ██║   ██║██║  ██║██║█████╗
+██║      ██║   ██║██║  ██║██║██╔══╝
+╚██████╗ ╚██████╔╝██████╔╝██║███████╗
+ ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝╚══════╝"""
+
+def print_banner(version: str, mode: str) -> None:
+    art = Text(ASCII_ART, style="bold cyan", justify="center")
+    subtitle = Text(f"\nv{version}  ·  {mode} mode", style="dim", justify="center")
+    hint = Text("Type /help for commands, /exit to quit", style="dim", justify="center")
+    content = Text.assemble(art, subtitle, "\n", hint)
+    panel = Panel(content, border_style="cyan", padding=(1, 4))
+    console.print(Align.center(panel))
+    console.print()
+
 def start_session(mode: str, version: str):
-    console.print(f"\n[bold cyan]Codie[/bold cyan] [dim]v{version} - {mode}[/dim]")
-    console.print("[dim]Type /help for commands, /exit to quit.[/dim]\n")
+    print_banner(version, mode)
 
     memory = ""
     memory_enabled = False
