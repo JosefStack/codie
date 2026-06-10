@@ -72,19 +72,19 @@ def configure(force: bool = False) -> str:
         mode = "review"
 
     console.print("\n[bold]Available models:[/bold]")
-    console.print("  1. [cyan][bold]Llama 4 Scout[/bold][/cyan] [dim](meta-llama/llama-4-scout-17b-16e-instruct)[/dim]")
-    console.print("  2. [cyan][bold]GPT OSS 120B[/bold][/cyan] [dim](openai/gpt-oss-120b)[/dim]")
-    console.print("  3. [cyan][bold]GPT OSS 20B[/bold][/cyan] [dim](openai/gpt-oss-20b)[/dim]")
+    console.print("  1. [cyan][bold]GPT OSS 120B[/bold][/cyan] [dim](openai/gpt-oss-120b)[/dim]")
+    console.print("  2. [cyan][bold]GPT OSS 20B[/bold][/cyan] [dim](openai/gpt-oss-20b)[/dim]")
+    console.print("  3. [cyan][bold]Llama 4 Scout[/bold][/cyan] [dim](meta-llama/llama-4-scout-17b-16e-instruct)[/dim]")
     console.print("  4. [cyan][bold]Qwen 3 32B[/bold][/cyan] [dim](qwen/qwen3-32b)[/dim]")
 
     choice = input("Choose model [1-4] (default: 1): ").strip() or "1"
     models = {
-        "1": "meta-llama/llama-4-scout-17b-16e-instruct",
-        "2": "openai/gpt-oss-120b",
-        "3": "openai/gpt-oss-20b",
+        "1": "openai/gpt-oss-120b",
+        "2": "openai/gpt-oss-20b",
+        "3": "meta-llama/llama-4-scout-17b-16e-instruct",
         "4": "qwen/qwen3-32b",
     }
-    model = models.get(choice, "meta-llama/llama-4-scout-17b-16e-instruct")
+    model = models.get(choice, "openai/gpt-oss-120b")
     
     save_config(groq, model, tavily, jina, mode)
     load_config()  # Load the config to set environment variables immediately

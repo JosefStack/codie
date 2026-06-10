@@ -13,7 +13,7 @@ load_dotenv()
 console = Console()
 
 def get_model() -> str:
-    return os.environ.get("CODIE_MODEL", "meta-llama/llama-4-scout-17b-16e-instruct")
+    return os.environ.get("CODIE_MODEL", "openai/gpt-oss-120b")
 
 client = OpenAI(
     api_key=os.environ.get("GROQ_API_KEY"),
@@ -43,7 +43,6 @@ def stream_response(messages: list, token_tracker: TokenTracker) -> str:
     #         full_response += content
 
     # console.print()
-    print(response.model)
 
     full_response = response.choices[0].message.content
     console.print("[bold cyan]Codie:[/bold cyan]")
