@@ -61,23 +61,6 @@ On first run, Codie walks you through setup:
 
 ![First run setup](assets/screenshots/first-run.png)
 
-```
-Welcome to Codie! Let's get you set up.
-
-GROQ API key (groq.com): ...
-Tavily API key (tavily.com): ...
-Jina API key (jina.ai, optional): ...
-Default mode [review/auto/plan] (enter for review): review
-
-Available models:
-  1. GPT OSS 120B
-  2. GPT OSS 20B
-  3. Llama 4 Scout
-  4. Qwen 3 32B
-
-Config saved to ~/.codie/config.toml
-```
-
 To update your keys or change model at any time:
 
 ```bash
